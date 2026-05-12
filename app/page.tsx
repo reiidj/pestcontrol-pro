@@ -2,27 +2,28 @@ import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 
 export default async function LandingPage() {
-  console.log('ENV CHECK:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Loaded' : '❌ Missing')
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   
-  // Fetch services from your DB
-  const { data: services, error } = await supabase.from('services').select('*')
-
-  console.log('--- DATABASE CHECK ---')
-  console.log('Data:', services)
-  console.log('Error:', error)
-  console.log('----------------------')
+  const { data: services } = await supabase.from('services').select('*')
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <nav className="flex justify-between items-center p-6 bg-white shadow-sm">
-        <h1 className="text-2xl font-bold text-blue-900">PestControl Pro</h1>
-        <div className="space-x-4">
-          <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-blue-900">Login</Link>
-          <Link href="/login" className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
-            Get Started
-          </Link>
+    <div className="min-h-screen bg-white">
+      <nav className="flex items-center justify-between px-8 py-6 border-b">
+        <span className="text-xl font-bold text-blue-600">PestControl Pro</span>
+        <div className="space-x-6 flex items-center">
+          <Link href="#services" className="text-gray-600">Services</Link>
+          
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500">{user.email}</span>
+              <Link href="/app" className="text-blue-600 font-medium">My Bookings</Link>
+            </div>
+          ) : (
+            <Link href="/login" className="px-5 py-2 bg-blue-600 text-white rounded-full">
+              Login
+            </Link>
+          )}
         </div>
       </nav>
 
