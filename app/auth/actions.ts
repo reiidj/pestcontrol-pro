@@ -55,33 +55,6 @@ export async function login(formData: FormData) {
     }
 }
 
-export async function createOrder(serviceId: string) {
-  const supabase = await createClient()
-
-  // 1. Get the current user
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    return redirect('/login') // add a message here in the future about needing to log in to place an order
-  }
-
-  // 2. Insert the order
-  const { error } = await supabase.from('orders').insert({
-    user_id: user.id,
-    service_id: serviceId,
-    status: 'pending'
-  })
-
-  if (error) {
-    console.error('Order Error:', error.message)
-    return { error: 'Failed to place order' }
-  }
-
-  // 3. Refresh and send to their dashboard
-  revalidatePath('/dashboard', 'layout')
-  redirect('/dashboard')
-}
-
 export async function signout() {
   const supabase = await createClient()
   
@@ -93,4 +66,68 @@ export async function signout() {
   
   // 3. Send them back to the welcome page
   redirect('/')
+}
+
+export async function createOrder(formData: FormData) {
+  const supabase = await createClient()
+
+  // 1. Extract values from the form data
+  const serviceId = formData.get('serviceId') as string
+  const scheduledDate = formData.get('scheduledDate') as string
+
+  // 2. Authenticate the User
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    redirect('/login')
+  }
+
+  if (!scheduledDate) {
+    return { error: 'Please select a date for the service.' }
+  }
+
+  // 3. Insert the order with the selected date
+  const { error } = await supabase.from('orders').insert({
+    user_id: user.id,
+    service_id: serviceId,
+    scheduled_date: scheduledDate,
+    status: 'pending', // System sets this automatically
+  })
+
+  if (error) {
+    console.error('Order Error:', error.message)
+    return { error: 'Failed to place order.' }
+  }
+
+  // 4. Refresh & Redirect
+  revalidatePath('/dashboard', 'layout')
+  redirect('/dashboard')
+}
+
+export async function updateOrderStatus(formData: FormData) {
+  const supabase = await createClient()
+
+  // 1. Get data from the admin form submission
+  const orderId = formData.get('orderId') as string
+  const newStatus = formData.get('status') as string
+
+  // 2. Security Check: Make sure the person doing this is actually an admin
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || user.app_metadata?.role !== 'admin') {
+    throw new Error('Unauthorized access.')
+  }
+
+  // 3. Update the database row
+  const { error } = await supabase
+    .from('orders')
+    .update({ status: newStatus })
+    .eq('id', orderId)
+
+  if (error) {
+    console.error('Update Error:', error.message)
+    return { error: 'Failed to update order status.' }
+  }
+
+  // 4. Instantly refresh both dashboards so everyone sees the updated status
+  revalidatePath('/admin')
+  revalidatePath('/dashboard')
 }

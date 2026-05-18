@@ -1,7 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
+import { updateOrderStatus } from '@/app/auth/actions'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import SignOutButton from '@/components/SignOutButton'
+import { OrderWithRelations } from '@/types/database'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -12,19 +14,23 @@ export default async function AdminDashboard() {
     redirect('/')
   }
 
-  // 2. Fetch Orders with Customer Info
-  // We use a "join" by selecting from 'profiles' via the 'user_id' relationship
-  const { data: orders, error } = await supabase
+  // 2. Fetch Orders with clean typing applied
+  const { data, error } = await supabase
     .from('orders')
-    .select(`
-      id,
-      status,
-      created_at,
-      profiles (
-        email
-      )
-    `)
+    .select('id, status, created_at, profiles(email), services(name, price)')
     .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error("Supabase Query Error:", error.message)
+  }
+
+  // Cast the data safely to our structural interface type
+  const orders: OrderWithRelations[] = (data as unknown as OrderWithRelations[]) || []
+
+  // 3. Calculate Total Revenue safely without any TS warnings
+  const totalRevenue = orders
+    .filter((order) => order.status === 'completed')
+    .reduce((sum, order) => sum + (order.services?.price || 0), 0)
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -54,14 +60,16 @@ export default async function AdminDashboard() {
         {/* Header Stats */}
         <header className="mb-10">
           <h1 className="text-3xl font-bold text-slate-900">Order Management</h1>
-          <p className="text-slate-500 mt-1">Track and update customer pest control requests.</p>
+          <p className="text-slate-900 mt-1">Track and update customer pest control requests.</p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
           <StatCard title="Total Orders" value={orders?.length || 0} color="blue" />
           <StatCard title="Pending" value={orders?.filter(o => o.status === 'pending').length || 0} color="yellow" />
           <StatCard title="Completed" value={orders?.filter(o => o.status === 'completed').length || 0} color="green" />
-          <StatCard title="Revenue" value="$0.00" color="slate" />
+          
+          {/* FIXED: Now dynamically displays total revenue formatted to 2 decimal places */}
+          <StatCard title="Revenue" value={`$${totalRevenue.toFixed(2)}`} color="slate" />
         </div>
 
         {/* Orders Table */}
@@ -71,44 +79,60 @@ export default async function AdminDashboard() {
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Service</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {orders && orders.length > 0 ? (
+              {orders.length > 0 ? (
                 orders.map((order) => (
                   <tr key={order.id} className="hover:bg-slate-50 transition-colors">
+
                     <td className="px-6 py-4 text-sm font-mono text-slate-500">
                       #{order.id.slice(0, 8)}
                     </td>
+
                     <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      {/* @ts-expect-error - Handle nested profiles data */}
                       {order.profiles?.email}
                     </td>
+
+                    <td className="px-6 py-4 text-sm text-slate-700 font-semibold">
+                      {order.services?.name || 'Unknown Service'}
+                    </td>
+
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
                         order.status === 'completed' ? 'bg-green-100 text-green-700' : 
                         order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 
-                        'bg-slate-100 text-slate-600'
+                        'bg-slate-100 text-slate-900'
                       }`}>
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-500">
+
+                    <td className="px-6 py-4 text-sm text-slate-900">
                       {new Date(order.created_at).toLocaleDateString()}
                     </td>
+
                     <td className="px-6 py-4 text-right">
-                      <button className="text-sm font-bold text-blue-600 hover:text-blue-800 transition">
-                        Update Status
-                      </button>
+                      {/* @ts-expect-error - Next.js handles server action return values natively */}
+                      <form action={updateOrderStatus} className="inline-flex items-center gap-2 justify-end w-full">
+                        <input type="hidden" name="orderId" value={order.id} />
+                        <select name="status" defaultValue={order.status} className="...">
+                          <option value="pending">Pending</option>
+                          <option value="scheduled">Scheduled</option>
+                          <option value="completed">Completed</option>
+                        </select>
+                        <button type="submit" className="...">Save</button>
+                      </form>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic">
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-900 italic">
                     No orders found in the system.
                   </td>
                 </tr>
