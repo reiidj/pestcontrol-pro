@@ -32,6 +32,30 @@ export default async function AdminDashboard() {
     .filter((order) => order.status === 'completed')
     .reduce((sum, order) => sum + (order.services?.price || 0), 0)
 
+  const STATUS_STYLES = {
+    pending: {
+      bg: 'bg-amber-50 border-amber-200 text-amber-700',
+      dot: 'bg-amber-400',
+      label: 'Pending'
+    },
+    scheduled: {
+      bg: 'bg-blue-50 border-blue-200 text-blue-700',
+      dot: 'bg-blue-500',
+      label: 'Scheduled'
+    },
+    completed: {
+      bg: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+      dot: 'bg-emerald-500',
+      label: 'Completed'
+    },
+
+    cancelled: {
+      bg: 'bg-slate-100 border-slate-200 text-slate-600',
+      dot: 'bg-slate-400',
+      label: 'Cancelled'
+    }
+  } as const;
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Admin Sidebar/Nav */}
@@ -103,13 +127,17 @@ export default async function AdminDashboard() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                        order.status === 'completed' ? 'bg-green-100 text-green-700' : 
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 
-                        'bg-slate-100 text-slate-900'
-                      }`}>
-                        {order.status}
-                      </span>
+                      {(() => {
+                        const status = (order.status || 'pending') as keyof typeof STATUS_STYLES;
+                        const config = STATUS_STYLES[status];
+                        
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${config.bg}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
+                            {config.label}
+                          </span>
+                        );
+                      })()}
                     </td>
 
                     <td className="px-6 py-4 text-sm text-slate-900">
@@ -124,6 +152,7 @@ export default async function AdminDashboard() {
                           <option value="pending">Pending</option>
                           <option value="scheduled">Scheduled</option>
                           <option value="completed">Completed</option>
+                          <option value="cancelled">Cancelled</option>
                         </select>
                         <button type="submit" className="...">Save</button>
                       </form>

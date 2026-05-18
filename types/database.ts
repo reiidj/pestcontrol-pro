@@ -14,21 +14,16 @@ export interface Order {
   id: string
   user_id: string
   service_id: string
-  status: 'pending' | 'scheduled' | 'completed'
+  status: 'pending' | 'scheduled' | 'completed' | 'cancelled' 
   scheduled_date: string | null
   created_at: string
 }
 
-// This handles the relational data structure returned by your Supabase joins
 export interface OrderWithRelations {
   id: string
-  status: 'pending' | 'scheduled' | 'completed'
+  status: 'pending' | 'scheduled' | 'completed' | 'cancelled' 
   created_at: string
-  profiles: {
-    email: string
-  } | null
-  services: {
-    name: string
-    price: number
-  } | null
+  profiles: { email: string } | null
+  services: { name: string; price: number } | null
 }
+

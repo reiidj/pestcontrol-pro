@@ -23,6 +23,31 @@ export default async function DashboardPage() {
     console.error("Dashboard Fetch Error:", error.message)
   }
 
+  const STATUS_STYLES = {
+    pending: {
+      bg: 'bg-amber-50 border-amber-200 text-amber-700',
+      dot: 'bg-amber-400',
+      label: 'Pending'
+    },
+    scheduled: {
+      bg: 'bg-blue-50 border-blue-200 text-blue-700',
+      dot: 'bg-blue-500',
+      label: 'Scheduled'
+    },
+    completed: {
+      bg: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+      dot: 'bg-emerald-500',
+      label: 'Completed'
+    },
+
+    cancelled: {
+      bg: 'bg-slate-100 border-slate-200 text-slate-600',
+      dot: 'bg-slate-400',
+      label: 'Cancelled'
+    }
+  } as const;
+
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
@@ -46,16 +71,20 @@ export default async function DashboardPage() {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <span className="text-lg font-black text-blue-600">
-                    ${booking.services?.price || '0.00'}
-                  </span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    booking.status === 'completed' ? 'bg-green-100 text-green-700' : 
-                    booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 
-                    'bg-blue-100 text-blue-700'
-                  }`}>
-                    {booking.status}
-                  </span>
+                  <span className="text-lg font-black text-slate-900">${booking.services?.price || '0.00'}</span>
+                  
+                  {/* 🌟 NEW REFACTORED STATUS BADGE */}
+                  {(() => {
+                    const status = (booking.status || 'pending') as keyof typeof STATUS_STYLES;
+                    const config = STATUS_STYLES[status];
+                    
+                    return (
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${config.bg}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
+                        {config.label}
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
             ))

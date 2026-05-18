@@ -3,11 +3,16 @@ import { createOrder } from '@/app/auth/actions'
 import Navbar from '@/components/NavBar'  
 import Link from 'next/link'
 
-export default async function LandingPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  const { data: services } = await supabase.from('services').select('*')
+export default async function LandingPage({
+    searchParams,
+  }: {
+    searchParams: Promise<{ error?: string }>
+  }) {
+    const params = await searchParams
+    const errorMessage = params.error
+
+    const supabase = await createClient()
+    const { data: services } = await supabase.from('services').select('*')
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900"> {/* FIXED: Added opening fragment wrapper so components can coexist side by side */}

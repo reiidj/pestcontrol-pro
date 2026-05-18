@@ -73,7 +73,7 @@ export async function createOrder(formData: FormData) {
 
   // 1. Extract values from the form data
   const serviceId = formData.get('serviceId') as string
-  const scheduledDate = formData.get('scheduledDate') as string
+  const scheduledDateString = formData.get('scheduledDate') as string
 
   // 2. Authenticate the User
   const { data: { user } } = await supabase.auth.getUser()
@@ -81,24 +81,45 @@ export async function createOrder(formData: FormData) {
     redirect('/login')
   }
 
-  if (!scheduledDate) {
-    return { error: 'Please select a date for the service.' }
+  // 3. BACKEND VALIDATION: Check if empty
+  if (!scheduledDateString) {
+    return { error: 'Please select a preferred date for the service.' }
   }
 
-  // 3. Insert the order with the selected date
+  // 4. BACKEND VALIDATION: Block historical dates, block old dates not possible
+  // Create a Date object from the input string (YYYY-MM-DD format parsed as midnight UTC)
+  const chosenDate = new Date(scheduledDateString)
+  
+  // Create a comparison date for today, set exactly to midnight to allow booking for today
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  if (chosenDate < today) {
+    return { error: 'Invalid date selection. You cannot book an appointment in the past.' }
+  }
+
+  // 5. Insert the order if validation passes
   const { error } = await supabase.from('orders').insert({
     user_id: user.id,
     service_id: serviceId,
-    scheduled_date: scheduledDate,
-    status: 'pending', // System sets this automatically
+    scheduled_date: scheduledDateString,
+    status: 'pending', 
   })
+
+  if (!scheduledDateString) {
+    redirect('/?error=Please select a preferred date for the service.')
+  }
+
+  if (chosenDate < today) {
+    redirect('/?error=You cannot book an appointment in the past.')
+  }
 
   if (error) {
     console.error('Order Error:', error.message)
-    return { error: 'Failed to place order.' }
+    redirect('/?error=Failed to place order. Please try again.')
   }
 
-  // 4. Refresh & Redirect
+  // 6. Refresh & Redirect
   revalidatePath('/dashboard', 'layout')
   redirect('/dashboard')
 }
