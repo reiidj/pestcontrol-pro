@@ -12,86 +12,75 @@ export default async function Navbar() {
   const isAdmin = user?.app_metadata?.role === 'admin'
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[#F9F7F2]/80 backdrop-blur-xl border-b border-[#E8E4DC] transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 w-full pointer-events-none">
+      
+      {/* Pill Container (re-enable pointer events for the nav itself) */}
+      <nav className="pointer-events-auto w-full max-w-7xl bg-white/95 backdrop-blur-md shadow-sm rounded-full px-6 py-3 flex items-center justify-between border border-gray-200">
         
-        {/* ─── BRANDING ─────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0F1F15] to-[#162D1D] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
-                <path fillRule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <span className="text-xl font-black text-[#0F1F15] tracking-tight group-hover:text-[#4A7C59] transition-colors">
-              EcoGuard
-            </span>
+        {/* ─── BRANDING (Left) ────────────────────────────────────────────── */}
+        <div className="flex items-center w-1/4">
+          <Link href="/" className="text-[1.6rem] font-black text-[#3A6346] tracking-tight">
+            NestGuard
           </Link>
-
-          {/* ─── PAGE NAVIGATION (DESKTOP) ──────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-7">
-            <Link href="/#services" className="text-[0.85rem] font-bold text-[#6B7A6E] hover:text-[#0F1F15] transition-colors">
-              Services
-            </Link>
-            <Link href="/#standards" className="text-[0.85rem] font-bold text-[#6B7A6E] hover:text-[#0F1F15] transition-colors">
-              Standards
-            </Link>
-            <Link href="/#reviews" className="text-[0.85rem] font-bold text-[#6B7A6E] hover:text-[#0F1F15] transition-colors">
-              Reviews
-            </Link>
-            <Link href="/contact" className="text-[0.85rem] font-bold text-[#6B7A6E] hover:text-[#0F1F15] transition-colors">
-              Contact
-            </Link>
-          </div>
         </div>
         
-        {/* ─── ACTIONS & AUTH ───────────────────────────────────────────── */}
-        <div className="flex items-center gap-4 md:gap-6">
+        {/* ─── PAGE NAVIGATION (Center) ───────────────────────────────────── */}
+        <div className="hidden md:flex items-center justify-center gap-8 w-2/4">
+          <Link href="/#services" className="text-[0.9rem] font-bold text-gray-700 hover:text-[#3A6346] transition-colors">
+            Services
+          </Link>
+          <Link href="/#standards" className="text-[0.9rem] font-bold text-gray-700 hover:text-[#3A6346] transition-colors">
+            Standards
+          </Link>
+          <Link href="/#reviews" className="text-[0.9rem] font-bold text-gray-700 hover:text-[#3A6346] transition-colors">
+            Reviews
+          </Link>
+          <Link href="/contact" className="text-[0.9rem] font-bold text-gray-700 hover:text-[#3A6346] transition-colors">
+            Contact
+          </Link>
+        </div>
+        
+        {/* ─── ACTIONS & AUTH (Right) ─────────────────────────────────────── */}
+        <div className="flex items-center justify-end gap-5 w-1/4">
           
-          {/* Admin Dashboard shortcut badge */}
-          {isAdmin && (
-            <Link 
-              href="/admin" 
-              className="hidden sm:inline-flex items-center text-[0.65rem] font-bold uppercase tracking-[0.15em] bg-[#C8A96E]/10 border border-[#C8A96E]/30 text-[#C8A96E] px-3 py-1.5 rounded-full hover:bg-[#C8A96E]/20 transition-colors shadow-sm"
-            >
-              Admin Portal
-            </Link>
-          )}
+          {/* Search Icon */}
+          <button className="text-gray-700 hover:text-black transition-colors" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-[18px] h-[18px]">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </button>
+
+          {/* Vertical Divider */}
+          <div className="h-6 w-px bg-gray-300"></div>
           
+          {/* Auth State */}
           {user ? (
-            /* Authenticated Active Session Layout */
             <div className="flex items-center gap-4">
-              <Link 
-                href="/dashboard" 
-                className="text-[0.85rem] font-bold text-[#4A7C59] hover:text-[#0F1F15] transition-colors"
-              >
-                My Bookings
+              {isAdmin && (
+                <Link href="/admin" className="hidden sm:block text-[0.8rem] font-bold uppercase tracking-widest text-[#C8A96E] hover:text-[#A8895E]">
+                  Admin
+                </Link>
+              )}
+              <Link href="/dashboard" className="text-[0.9rem] font-bold text-[#3A6346] hover:text-[#162D1D]">
+                Bookings
               </Link>
-              
-              <div className="hidden sm:block h-5 w-px bg-[#E8E4DC]"></div>
-              
-              <div className="hidden sm:flex items-center gap-2.5 bg-white border border-[#E8E4DC] px-2 py-1 rounded-full shadow-sm">
-                <div className="w-6 h-6 rounded-full bg-[#EBF2ED] text-[#4A7C59] flex items-center justify-center text-[0.65rem] font-black uppercase">
-                  {user.email?.charAt(0) || 'U'}
-                </div>
-                <span className="text-[0.75rem] font-semibold text-[#6B7A6E] pr-2 max-w-[120px] truncate">
-                  {user.email}
-                </span>
-              </div>
-              
               <SignOutButton />
             </div>
           ) : (
-            /* Unauthenticated Single Action Target */
             <Link 
               href="/login" 
-              className="px-6 py-2.5 bg-gradient-to-b from-[#4A7C59] to-[#3A6346] hover:from-[#3A6346] hover:to-[#2B4A34] text-white rounded-xl text-[0.85rem] font-bold shadow-[0_4px_14px_rgba(74,124,89,0.25)] hover:shadow-[0_6px_20px_rgba(74,124,89,0.35)] hover:-translate-y-0.5 transition-all duration-200 active:scale-95"
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#4A7C59] hover:bg-[#3A6346] text-white rounded-full text-[0.9rem] font-bold transition-all shadow-md active:scale-95"
             >
-              Client Login
+              {/* Padlock Icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-[14px] h-[14px] mb-[1px]">
+                <path fillRule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clipRule="evenodd" />
+              </svg>
+              Login
             </Link>
           )}
         </div>
-      </div>
-    </nav>
+
+      </nav>
+    </div>
   )
 }

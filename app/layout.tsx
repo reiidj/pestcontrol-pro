@@ -13,14 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'PestControl Pro | Eco-Friendly Smart Pest Management',
+  title: 'NestGuard - Pest Control Services',
   description: 'Professional commercial and residential pest elimination services. Transparent pricing, instant online booking, and certified eco-safe treatments.',
   keywords: ['pest control SaaS', 'termite treatment', 'bed bug elimination', 'local exterminator'],
   openGraph: {
-    title: 'PestControl Pro | Smart Pest Management',
+    title: 'NestGuard - Pest Control Services',
     description: 'Book certified pest control services online instantly.',
     url: 'https://yourdomain.com',
-    siteName: 'PestControl Pro',
+    siteName: 'NestGuard',
     type: 'website',
   },
 }
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`scroll-smooth ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

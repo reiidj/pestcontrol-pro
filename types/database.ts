@@ -23,6 +23,7 @@ export interface OrderWithRelations {
   id: string
   status: 'pending' | 'scheduled' | 'completed' | 'cancelled' 
   created_at: string
+  scheduled_date: string | null
   profiles: { email: string } | null
   services: { name: string; price: number } | null
 }

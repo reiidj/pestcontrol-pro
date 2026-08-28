@@ -5,23 +5,50 @@ import Link from 'next/link'
 import SignOutButton from '@/components/SignOutButton'
 import { OrderWithRelations } from '@/types/database'
 import { BarChart3 } from 'lucide-react'
+import OrderFilters from '@/components/admin/OrderFilters'
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; date?: string }>
+}) {
+  const params = await searchParams // Read URL parameters
+  const searchTerm = params.search?.toLowerCase() || ''
+  const filterDate = params.date || ''
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (user?.app_metadata?.role !== 'admin') redirect('/')
 
   const { data, error } = await supabase
     .from('orders')
-    .select('id, status, created_at, profiles(email), services(name, price)')
+    .select('id, status, created_at, scheduled_date, profiles(email), services(name, price)')
     .order('created_at', { ascending: false })
 
-  const orders: OrderWithRelations[] = (data as unknown as OrderWithRelations[]) || []
+  let orders: OrderWithRelations[] = (data as unknown as OrderWithRelations[]) || []
 
-  // 3. Calculate Total Revenue safely without any TS warnings
+  // 1. Calculate stats BEFORE filtering (so stats always show the grand total)
   const totalRevenue = orders
     .filter((order) => order.status === 'completed')
     .reduce((sum, order) => sum + (order.services?.price || 0), 0)
+    
+  const totalOrdersCount = orders.length
+  const pendingCount = orders.filter(o => o.status === 'pending').length
+  const completedCount = orders.filter(o => o.status === 'completed').length
+
+  // 2. Apply Filters to the orders array
+  if (searchTerm) {
+    orders = orders.filter((order) => 
+      order.id.toLowerCase().includes(searchTerm) || 
+      (order.profiles?.email || '').toLowerCase().includes(searchTerm)
+    )
+  }
+
+  if (filterDate) {
+    orders = orders.filter((order) => 
+      order.created_at.startsWith(filterDate) // created_at is ISO string, so startsWith matches YYYY-MM-DD safely
+    )
+  }
 
   const STATUS_STYLES = {
     pending: {
@@ -57,7 +84,7 @@ export default async function AdminDashboard() {
   const statCards = [
     {
       title: 'Total Orders',
-      value: orders?.length || 0,
+      value: totalOrdersCount,
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
@@ -68,7 +95,7 @@ export default async function AdminDashboard() {
     },
     {
       title: 'Pending',
-      value: orders?.filter(o => o.status === 'pending').length || 0,
+      value: pendingCount,
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -79,7 +106,7 @@ export default async function AdminDashboard() {
     },
     {
       title: 'Completed',
-      value: orders?.filter(o => o.status === 'completed').length || 0,
+      value: completedCount,
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -155,20 +182,6 @@ export default async function AdminDashboard() {
         }
       `}</style>
 
-      {/* ─── NAV ────────────────────────── */}
-      <nav className="sticky top-0 z-30 bg-[#0F1F15] px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="text-sm font-bold text-white">EcoGuard Admin</span>
-          <Link href="/admin/analytics" className="text-[10px] font-bold uppercase tracking-widest bg-[#4A7C59] text-white px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-[#3D6B4A] transition-colors">
-            <BarChart3 className="w-3 h-3" /> View Analytics
-          </Link>
-        </div>
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium text-white/50 hover:text-white">View Site</Link>
-          <SignOutButton />
-        </div>
-      </nav>
-
       {/* ─── MAIN ───────────────────────────────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-6 md:px-8 py-10">
 
@@ -227,6 +240,9 @@ export default async function AdminDashboard() {
           ))}
         </div>
 
+        {/* ── Filters Component ────────────────────────────────────────────── */}
+        <OrderFilters />
+
         {/* ── Orders table ────────────────────────────────────────────── */}
         <div
           className="rounded-2xl overflow-hidden"
@@ -260,7 +276,7 @@ export default async function AdminDashboard() {
             <table className="w-full text-left">
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--fog)', background: 'rgba(15,31,21,0.018)' }}>
-                  {['Order ID', 'Customer', 'Service', 'Status', 'Date', 'Update Status'].map((h, i) => (
+                  {['Order ID', 'Customer', 'Service', 'Status', 'Scheduled Date', 'Update Status'].map((h, i) => (
                     <th
                       key={h}
                       className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest"
@@ -355,11 +371,13 @@ export default async function AdminDashboard() {
 
                         {/* Date */}
                         <td className="px-6 py-4 text-sm" style={{ color: 'var(--muted)' }}>
-                          {new Date(order.created_at).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
+                          {order.scheduled_date
+                            ? new Date(order.scheduled_date).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : 'Not scheduled'}
                         </td>
 
                         {/* Actions */}

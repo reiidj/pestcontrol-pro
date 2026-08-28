@@ -17,9 +17,6 @@ export default async function AnalyticsPage() {
   return (
     <div className="min-h-screen bg-[#F9F7F2] p-10 font-sans">
       <div className="max-w-6xl mx-auto">
-        <Link href="/admin" className="flex items-center gap-2 text-sm font-bold text-[#4A7C59] hover:text-[#0F1F15] mb-8">
-          <ArrowLeft className="w-4 h-4" /> Back to Dashboard
-        </Link>
         
         <div className="mb-10">
           <h1 className="text-4xl font-black text-[#0F1F15] tracking-tight">Business Analytics</h1>

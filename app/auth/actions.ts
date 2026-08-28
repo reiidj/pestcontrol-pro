@@ -71,9 +71,13 @@ export async function signout() {
 export async function createOrder(formData: FormData) {
   const supabase = await createClient()
 
-  // 1. Extract values from the form data
+  // 1. Extract values from the new form data
   const serviceId = formData.get('serviceId') as string
   const scheduledDateString = formData.get('scheduledDate') as string
+  const firstName = formData.get('firstName') as string
+  const lastName = formData.get('lastName') as string
+  const address = formData.get('address') as string
+  const finalPrice = formData.get('finalPrice') as string
 
   // 2. Authenticate the User
   const { data: { user } } = await supabase.auth.getUser()
@@ -81,16 +85,13 @@ export async function createOrder(formData: FormData) {
     redirect('/login')
   }
 
-  // 3. BACKEND VALIDATION: Check if empty
-  if (!scheduledDateString) {
-    return { error: 'Please select a preferred date for the service.' }
+  // 3. BACKEND VALIDATION: Check for missing fields
+  if (!scheduledDateString || !firstName || !lastName || !address || !finalPrice) {
+    return { error: 'Please fill out all required fields to proceed.' }
   }
 
-  // 4. BACKEND VALIDATION: Block historical dates, block old dates not possible
-  // Create a Date object from the input string (YYYY-MM-DD format parsed as midnight UTC)
+  // 4. BACKEND VALIDATION: Block historical dates
   const chosenDate = new Date(scheduledDateString)
-  
-  // Create a comparison date for today, set exactly to midnight to allow booking for today
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -98,25 +99,21 @@ export async function createOrder(formData: FormData) {
     return { error: 'Invalid date selection. You cannot book an appointment in the past.' }
   }
 
-  // 5. Insert the order if validation passes
+  // 5. Insert the order
   const { error } = await supabase.from('orders').insert({
     user_id: user.id,
     service_id: serviceId,
     scheduled_date: scheduledDateString,
+    first_name: firstName,
+    last_name: lastName,
+    address: address,
+    total_price: parseFloat(finalPrice), // Ensured as numeric for PostgreSQL
     status: 'pending', 
   })
 
-  if (!scheduledDateString) {
-    redirect('/?error=Please select a preferred date for the service.')
-  }
-
-  if (chosenDate < today) {
-    redirect('/?error=You cannot book an appointment in the past.')
-  }
-
   if (error) {
     console.error('Order Error:', error.message)
-    redirect('/?error=Failed to place order. Please try again.')
+    return { error: 'Failed to place order. Please try again.' }
   }
 
   // 6. Refresh & Redirect
@@ -151,4 +148,78 @@ export async function updateOrderStatus(formData: FormData) {
   // 4. Instantly refresh both dashboards so everyone sees the updated status
   revalidatePath('/admin')
   revalidatePath('/dashboard')
+}
+
+export async function validatePromoCode(code: string) {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .select('discount_percent, is_active, expires_at')
+    .eq('code', code.toUpperCase())
+    .single()
+
+  if (error || !data || !data.is_active) {
+    return { error: 'Invalid or expired promo code.' }
+  }
+
+  // Check expiration if a date is set
+  if (data.expires_at && new Date(data.expires_at) < new Date()) {
+    return { error: 'This promo code has expired.' }
+  }
+
+  return { discount: data.discount_percent }
+}
+
+// Add these functions to your existing app/auth/actions.ts file
+
+export async function createPromoCode(formData: FormData) {
+  const supabase = await createClient()
+  
+  // Ensure user is admin
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user?.app_metadata?.role !== 'admin') {
+    return { error: 'Unauthorized' }
+  }
+
+  const code = formData.get('code') as string
+  const discountPercent = parseFloat(formData.get('discountPercent') as string)
+  const expiresAt = formData.get('expiresAt') as string
+
+  const { error } = await supabase.from('promo_codes').insert({
+    code: code.toUpperCase().trim(),
+    discount_percent: discountPercent,
+    is_active: true,
+    expires_at: expiresAt ? new Date(expiresAt).toISOString() : null
+  })
+
+  if (error) {
+    console.error('Error creating promo code:', error.message)
+    return { error: 'Failed to create promo code.' }
+  }
+
+  revalidatePath('/admin/promos')
+}
+
+export async function togglePromoStatus(formData: FormData) {
+  const supabase = await createClient()
+  
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user?.app_metadata?.role !== 'admin') {
+    return { error: 'Unauthorized' }
+  }
+
+  const code = formData.get('code') as string
+  const currentState = formData.get('currentState') === 'true'
+
+  const { error } = await supabase.from('promo_codes')
+    .update({ is_active: !currentState })
+    .eq('code', code)
+
+  if (error) {
+    console.error('Error toggling promo status:', error.message)
+    return { error: 'Failed to update promo status.' }
+  }
+
+  revalidatePath('/admin/promos')
 }

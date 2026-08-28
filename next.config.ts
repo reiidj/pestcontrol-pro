@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // 🌟 Allow your local network IP to access fonts and dev assets
-  experimental: {
-    allowedDevOrigins: ['192.168.56.1']
-  }
-};
+import type { NextConfig } from 'next'
 
-module.exports = nextConfig;
+const nextConfig: NextConfig = {
+  allowedDevOrigins: ['192.168.56.1'],
+  // keep any other valid options here
+}
+
+export default nextConfig
