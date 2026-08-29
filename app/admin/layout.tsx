@@ -1,12 +1,24 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import SignOutButton from '@/components/SignOutButton'
 import { ShoppingCart, Ticket, BarChart3 } from 'lucide-react'
+
+// Define your navigation links in a clean array
+const NAV_LINKS = [
+  { name: 'Order Queue', href: '/admin', icon: ShoppingCart },
+  { name: 'Promo Codes', href: '/admin/promos', icon: Ticket },
+  { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+]
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+
   return (
     <div className="flex h-screen w-full font-sans overflow-hidden bg-[#F9F7F2] text-[#0F1F15]">
       {/* ─── GLOBAL ADMIN STYLES ─── */}
@@ -33,15 +45,24 @@ export default function AdminLayout({
           <div className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Dashboard</div>
           
           <nav className="space-y-1.5">
-            <Link href="/admin" className="flex items-center gap-3 px-4 py-3 hover:bg-[#4A7C59] hover:text-white rounded-xl text-sm font-bold transition-colors">
-              <ShoppingCart className="w-4 h-4" /> Order Queue
-            </Link>
-            <Link href="/admin/promos" className="flex items-center gap-3 px-4 py-3 text-white/50 hover:bg-white/5 hover:text-white rounded-xl text-sm font-bold transition-colors">
-              <Ticket className="w-4 h-4" /> Promo Codes
-            </Link>
-            <Link href="/admin/analytics" className="flex items-center gap-3 px-4 py-3 text-white/50 hover:bg-white/5 hover:text-white rounded-xl text-sm font-bold transition-colors">
-              <BarChart3 className="w-4 h-4" /> Analytics
-            </Link>
+            {NAV_LINKS.map((link) => {
+              const Icon = link.icon
+              const isActive = pathname === link.href
+
+              return (
+                <Link 
+                  key={link.name}
+                  href={link.href} 
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-colors ${
+                    isActive 
+                      ? 'bg-[#4A7C59] text-white shadow-sm' 
+                      : 'text-white/50 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" /> {link.name}
+                </Link>
+              )
+            })}
           </nav>
         </div>
 

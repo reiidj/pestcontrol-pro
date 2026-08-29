@@ -1,13 +1,15 @@
 import { signout } from '@/app/auth/actions'
+import { LogOut } from 'lucide-react'
 
 export default function SignOutButton() {
   return (
     <form action={signout}>
       <button 
-        type="submit"
-        className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors"
+        type="submit" 
+        title="Sign Out"
+        className="text-[#c33319] hover:text-[#9B1C1C] transition-colors p-1"
       >
-        Sign Out
+        <LogOut className="w-5 h-5" />
       </button>
     </form>
   )

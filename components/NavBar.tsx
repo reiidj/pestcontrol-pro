@@ -55,27 +55,39 @@ export default async function Navbar() {
           
           {/* Auth State */}
           {user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 sm:gap-6">
               {isAdmin && (
-                <Link href="/admin" className="hidden sm:block text-[0.8rem] font-bold uppercase tracking-widest text-[#C8A96E] hover:text-[#A8895E]">
+                <Link 
+                  href="/admin" 
+                  className="hidden sm:block text-sm font-bold text-[#0F1F15] hover:text-[#4A7C59] transition-colors"
+                >
                   Admin
                 </Link>
               )}
-              <Link href="/dashboard" className="text-[0.9rem] font-bold text-[#3A6346] hover:text-[#162D1D]">
-                Bookings
+              
+              <Link 
+                href="/dashboard" 
+                className="text-sm font-bold text-[#0F1F15] hover:text-[#4A7C59] transition-colors"
+              >
+                My Bookings
               </Link>
-              <SignOutButton />
+
+              {/* Vertical Divider for clean separation */}
+              <div className="w-[1px] h-4 bg-[#E8E4DC] hidden sm:block"></div>
+
+              <div className="flex items-center">
+                <SignOutButton />
+              </div>
             </div>
           ) : (
             <Link 
               href="/login" 
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#4A7C59] hover:bg-[#3A6346] text-white rounded-full text-[0.9rem] font-bold transition-all shadow-md active:scale-95"
+              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#0F1F15] hover:bg-[#4A7C59] text-white rounded-full text-sm font-bold transition-all shadow-md active:scale-95"
             >
-              {/* Padlock Icon */}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-[14px] h-[14px] mb-[1px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clipRule="evenodd" />
               </svg>
-              Login
+              Sign In
             </Link>
           )}
         </div>

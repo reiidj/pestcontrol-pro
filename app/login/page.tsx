@@ -1,15 +1,32 @@
 import { login, signup } from '@/app/auth/actions'
 import Link from 'next/link'
 
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
 export default async function LoginPage(props: {
-  searchParams: Promise<{ message?: string; error?: string }>;
+  searchParams: SearchParams;
 }) {
-  // Await the promised searchParams (Next.js 15 requirement)
   const searchParams = await props.searchParams;
+  
+  // Extract and type-cast the parameters safely
+  const error = searchParams.error as string | undefined;
+  const message = searchParams.message as string | undefined;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#F9F7F2] px-4 font-sans text-[#0F1F15]">
       
+      {/* Feedback Messages */}
+          {error && (
+            <div className="p-4 text-[13px] font-medium bg-[#FFF0F0] text-[#9B1C1C] rounded-xl border border-[#FECDCD] text-center">
+              {error}
+            </div>
+          )}
+          {message && (
+            <div className="p-4 text-[13px] font-medium bg-[#F0FDF4] text-[#166534] rounded-xl border border-[#bbf7d0] text-center">
+              {message}
+            </div>
+          )}
+
       {/* Optional: Back to Home Link */}
       <div className="absolute top-8 left-8 md:top-10 md:left-10">
         <Link 

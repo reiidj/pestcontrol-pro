@@ -171,15 +171,12 @@ export async function validatePromoCode(code: string) {
   return { discount: data.discount_percent }
 }
 
-// Add these functions to your existing app/auth/actions.ts file
-
 export async function createPromoCode(formData: FormData) {
   const supabase = await createClient()
   
-  // Ensure user is admin
   const { data: { user } } = await supabase.auth.getUser()
   if (user?.app_metadata?.role !== 'admin') {
-    return { error: 'Unauthorized' }
+    redirect('/admin/promos?error=Unauthorized access.')
   }
 
   const code = formData.get('code') as string
@@ -190,15 +187,17 @@ export async function createPromoCode(formData: FormData) {
     code: code.toUpperCase().trim(),
     discount_percent: discountPercent,
     is_active: true,
-    expires_at: expiresAt ? new Date(expiresAt).toISOString() : null
+    expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
+    created_at: new Date().toISOString(),
   })
 
   if (error) {
     console.error('Error creating promo code:', error.message)
-    return { error: 'Failed to create promo code.' }
+    redirect('/admin/promos?error=Failed to create promo code. It may already exist.')
   }
 
   revalidatePath('/admin/promos')
+  redirect('/admin/promos?message=Promo code created successfully!')
 }
 
 export async function togglePromoStatus(formData: FormData) {
