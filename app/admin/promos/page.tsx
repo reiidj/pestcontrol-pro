@@ -122,7 +122,10 @@ export default async function AdminPromos(props: {
                       {promo.expires_at ? new Date(promo.expires_at).toLocaleDateString() : 'Never'}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <form action={togglePromoStatus}>
+                      <form action={async (formData) => {
+                        "use server";
+                        await togglePromoStatus(formData);
+                      }}>
                         <input type="hidden" name="code" value={promo.code} />
                         <input type="hidden" name="currentState" value={promo.is_active.toString()} />
                         <button 

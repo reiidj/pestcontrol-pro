@@ -32,7 +32,6 @@ const SERVICE_TIERS = [
   },
   {
     id: '33333333-3333-4333-8333-333333333333',
-    id: 'tier-3-premium',
     name: 'Premium Eco-Guard',
     description: 'Maximum protection utilizing eco-botanical formulas, safe for families and heavy foliage properties.',
     price: 189,
