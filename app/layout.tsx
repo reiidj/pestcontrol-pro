@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'NestGuard - Pest Control Services',
     description: 'Book certified pest control services online instantly.',
-    url: 'https://yourdomain.com',
+    url: 'https://nestguardpest.vercel.app',
     siteName: 'NestGuard',
     type: 'website',
   },

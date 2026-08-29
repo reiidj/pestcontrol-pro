@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -6,9 +7,20 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-20 mb-20">
           <div className="md:col-span-2 space-y-4">
-            <h3 className="text-2xl font-black text-white tracking-tight">
-              NestGuard<span className="text-[#4ADE80]">.</span>
-            </h3>
+            
+            <div className="flex items-center gap-3">
+              <Image 
+                src="/NestGuard.png" 
+                alt="NestGuard Logo" 
+                width={40} 
+                height={40} 
+                className="w-10 h-10 object-contain"
+              />
+              <h3 className="text-2xl font-black text-white tracking-tight">
+                NestGuard<span className="text-[#4ADE80]">.</span>
+              </h3>
+            </div>
+
             <p className="text-sm font-medium text-white/40 max-w-sm leading-relaxed">
               Professional environmental services and pest control protecting your home, family, and peace of mind with eco-friendly, sustainable solutions.
             </p>

@@ -54,10 +54,10 @@ export default function Hero() {
       </div>
 
       {/* Promo Banner */}
-      <div className="bg-indigo-600 text-white px-4 py-6 text-center sm:px-6 lg:px-8 shadow-sm">
-        <p className="text-sm sm:text-base font-medium">
-           Don't miss out on this first order deal! Get 30% off with code:
-          <span className="inline-block font-bold tracking-wider ml-2 bg-white text-indigo-600 px-2 py-0.5 rounded-md shadow-sm">
+      <div className="bg-[#001A3E] text-white px-4 py-4 sm:py-5 text-center sm:px-6 lg:px-8 shadow-md border-b-4 border-[#94C969]">
+        <p className="text-sm sm:text-base font-medium flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+          <span>Don't miss out on this first order deal! Get 30% off with code:</span>
+          <span className="inline-block font-black tracking-widest bg-[#94C969] text-[#001A3E] px-3 py-1 rounded-md shadow-sm">
             WELCOME30
           </span>
         </p>
