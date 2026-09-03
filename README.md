@@ -23,6 +23,12 @@ Instead of a standard e-commerce template, this platform engineers a real-world 
 | **Data Visualization** | Recharts, Lucide React | Interactive client-side charting and lightweight SVG iconography. |
 | **Deployment** | Vercel | Edge network hosting and continuous CI/CD pipeline integration. |
 
+## Live Demonstration
+
+To view the live version of this portfolio and explore the projects in detail, visit the link below:
+
+**Official Portfolio**: https://nestguardpest.vercel.app/
+
 ## Platform Previews
 
 | Customer Booking Flow | Admin Analytics Dashboard |
