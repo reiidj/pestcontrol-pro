@@ -44,3 +44,7 @@ To get a local copy up and running for development or evaluation, follow these s
    ```bash
    git clone [https://github.com/reiidj/nestguard-pest.git](https://github.com/reiidj/nestguard-pest.git)
    cd nestguard-pest
+
+### Contact
+Rei Djemf M. Rivera - @reiidj
+Project Link: https://github.com/reiidj/nestguard-pest
