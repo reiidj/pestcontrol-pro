@@ -27,7 +27,7 @@ Instead of a standard e-commerce template, this platform engineers a real-world 
 
 | Customer Booking Flow | Admin Analytics Dashboard |
 | :---: | :---: |
-| ![Booking Flow Placeholder](assets/images/BookingFlow.png) | ![Admin Dashboard Placeholder](assets/images/AdminDashboard.png) |
+| ![Booking Flow Placeholder](assets/BookingFlow.png) | ![Admin Dashboard Placeholder](assets/AdminDashboard.png) |
 
 ## Getting Started
 
