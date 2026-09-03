@@ -1,53 +1,99 @@
 export default function StandardsPage() {
-  return (
-    <section id="standards" className="relative py-32 overflow-hidden bg-[#171717]">
-      <div className="absolute inset-0 z-0 opacity-[0.08] mix-blend-overlay">
-        <img 
-          src="https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2000&auto=format&fit=crop" 
-          alt="Forest Texture" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-[#171717] via-transparent to-[#171717] z-0" />
+  const standards = [
+    {
+      number: '01',
+      title: 'Zero Toxic Residue',
+      body: 'Eco-safe micro-encapsulation formulas designed for effective treatment while keeping your home comfortable for children and indoor pets.',
+    },
+    {
+      number: '02',
+      title: 'Real-Time Audit Logs',
+      body: 'Every treatment is documented in your dashboard with timestamps and service details, giving you a clear record of your property’s protection.',
+    },
+    {
+      number: '03',
+      title: '100% Service Guarantee',
+      body: 'If pests return within your covered service window, we return for a free re-treatment. No complicated claims or extra charges.',
+    },
+  ]
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-20">
-          <p className="text-[0.75rem] font-bold uppercase tracking-[0.2em] text-[#4ADE80] mb-4">
-            Enterprise-Grade Protocols
-          </p>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-[#FFFDF7]">
-            Why homeowners and managers switch to us
+  return (
+    <section
+      id="standards"
+      className="bg-[#171717] px-6 py-24 text-[#F9F7F2] sm:py-28 lg:py-32"
+    >
+      <div className="mx-auto max-w-7xl">
+
+        {/* Header */}
+        <div className="max-w-4xl">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="h-px w-10 bg-[#4ADE80]" />
+
+            <p className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-[#4ADE80]">
+              Our Standards
+            </p>
+          </div>
+
+          <h2 className="max-w-3xl text-4xl font-black leading-[0.98] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
+            Protection built around
+            <span className="block text-[#4ADE80]">
+              better standards.
+            </span>
           </h2>
-          <p className="mt-6 max-w-2xl mx-auto text-[1.05rem] leading-relaxed text-[#FFFDF7]/60">
-            Digital diagnostic tracking, targeted eco-safe micro-encapsulations, and comprehensive perimeter mapping — instead of heavy chemicals in your common rooms. Every treatment is logged, auditable, and backed by a service guarantee.
+
+          <p className="mt-7 max-w-2xl text-base leading-7 text-[#F9F7F2]/55 sm:text-lg">
+            Effective pest control should not mean unnecessary chemicals,
+            unclear service records, or complicated guarantees. NestGuard
+            combines targeted treatment with transparent service.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-16 border-t border-white/10">
-          {[
-            {
-              title: 'Zero Toxic Residue',
-              body: 'Eco-safe micro-encapsulation formulas. Safe for children and indoor family pets.',
-            },
-            {
-              title: 'Real-Time Audit Logs',
-              body: 'Inspect every treatment report inside your dashboard portal — timestamped and verifiable.',
-            },
-            {
-              title: '100% Service Guarantee',
-              body: 'Free field re-treatment if pests return within the covered window. No questions asked.',
-            },
-          ].map((f) => (
-            <div key={f.title} className="pl-6 border-l-2 border-[#166534] group">
-              <h4 className="text-lg font-bold text-[#FFFDF7] mb-3 group-hover:text-[#4ADE80] transition-colors">
-                {f.title}
-              </h4>
-              <p className="text-[0.95rem] leading-relaxed text-[#FFFDF7]/50">
-                {f.body}
-              </p>
+        {/* Standards */}
+        <div className="mt-20 grid border-t border-[#F9F7F2]/10 md:grid-cols-3">
+          {standards.map((standard, index) => (
+            <div
+              key={standard.title}
+              className={`group py-8 md:py-10 ${
+                index !== 0
+                  ? 'border-t border-[#F9F7F2]/10 md:border-l md:border-t-0'
+                  : ''
+              }`}
+            >
+              <div className="px-0 md:px-8 lg:px-10">
+                {/* Number */}
+                <div className="mb-8 flex items-center justify-between">
+                  <span className="text-xs font-black tracking-[0.15em] text-[#4ADE80]">
+                    {standard.number}
+                  </span>
+
+                  <span className="h-2 w-2 bg-[#3A6346] transition-colors duration-200 group-hover:bg-[#4ADE80]" />
+                </div>
+
+                {/* Title */}
+                <h3 className="mb-4 text-xl font-black tracking-[-0.02em] text-[#F9F7F2] transition-colors duration-200 group-hover:text-[#4ADE80]">
+                  {standard.title}
+                </h3>
+
+                {/* Description */}
+                <p className="max-w-sm text-sm leading-6 text-[#F9F7F2]/45">
+                  {standard.body}
+                </p>
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Bottom Statement */}
+        <div className="mt-8 flex flex-col gap-4 border-t border-[#F9F7F2]/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-xl text-xs leading-5 text-[#F9F7F2]/35">
+            Every service is documented, every treatment is targeted, and
+            every plan is backed by a clear service commitment.
+          </p>
+
+          <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.15em] text-[#F9F7F2]/50">
+            <span className="h-2 w-2 bg-[#4ADE80]" />
+            NestGuard Standard
+          </div>
         </div>
       </div>
     </section>

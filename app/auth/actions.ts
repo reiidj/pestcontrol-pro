@@ -9,20 +9,44 @@ export async function signup(formData: FormData) {
 
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirmPassword') as string
+    const captchaToken = formData.get('captchaToken') as string
+
+    console.log('--- SIGNUP ATTEMPT ---', { 
+        email, 
+        passLength: password?.length, 
+        hasCaptcha: !!captchaToken 
+    })
+
+    if (password !== confirmPassword) {
+        return redirect(`/login?error=${encodeURIComponent('Passwords do not match.')}`)
+    }
+
+    if (!captchaToken) {
+        return redirect(`/login?error=${encodeURIComponent('Please complete the security challenge.')}`)
+    }
 
     const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+            captchaToken,
+        }
     })
 
     if (error) {
         console.error('Signup error:', error.message)
-        // Redirect back to login with the specific error message
-        return redirect(`/login?error=${encodeURIComponent(error.message)}`)
+        
+        // Intercept Supabase's default duplicate email message
+        let errorMessage = error.message
+        if (errorMessage.includes('User already registered') || errorMessage.includes('already exists')) {
+            errorMessage = 'An account with this email already exists. Please log in.'
+        }
+
+        return redirect(`/login?error=${encodeURIComponent(errorMessage)}`)
     }
 
     revalidatePath('/', 'layout')
-    // Better to send them back to login with a "Check Email" message
     redirect('/login?message=Success! Please check your email to confirm.')
 }
 
@@ -31,10 +55,14 @@ export async function login(formData: FormData) {
 
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const captchaToken = formData.get('captchaToken') as string
 
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+            captchaToken: captchaToken || undefined,
+        }
     })
 
     if (error) {
@@ -42,7 +70,6 @@ export async function login(formData: FormData) {
     }
 
     // --- ROLE CHECK LOGIC ---
-    // We check the JWT first since we set up the metadata sync earlier
     const role = data.user.app_metadata?.role || 'customer'
 
     revalidatePath('/', 'layout')
@@ -50,7 +77,6 @@ export async function login(formData: FormData) {
     if (role === 'admin') {
         redirect('/admin')
     } else {
-        // If they are a customer, send them back to the welcome/landing page
         redirect('/') 
     }
 }
@@ -221,4 +247,39 @@ export async function togglePromoStatus(formData: FormData) {
   }
 
   revalidatePath('/admin/promos')
+}
+
+export async function submitIssue(formData: FormData) {
+  const supabase = await createClient()
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { error } = await supabase.from('site_issues').insert({
+    user_id: user?.id || null,
+    title,
+    description,
+    status: 'pending'
+  })
+
+  if (error) throw new Error('Failed to submit issue')
+}
+
+export async function updateIssueStatus(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string
+  const status = formData.get('status') as string
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user?.app_metadata?.role !== 'admin') throw new Error('Unauthorized')
+
+  const { error } = await supabase
+    .from('site_issues')
+    .update({ status })
+    .eq('id', id)
+
+  if (error) throw new Error('Failed to update status')
+  
+  revalidatePath('/admin/issues')
 }

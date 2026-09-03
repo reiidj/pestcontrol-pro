@@ -1,67 +1,168 @@
 export default function Hero() {
   return (
-    <header className="relative bg-gradient-to-b from-[#171717] via-[#1c1c1c] to-[#171717] overflow-hidden border-b border-[#166534]/30">
-      {/* Ambient Mesh Glows */}
-      <div className="absolute inset-0 pointer-events-none flex justify-center" aria-hidden>
-        <div className="absolute top-0 right-10 w-[600px] h-[600px] bg-[#166534]/15 rounded-full blur-[120px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-10 w-[600px] h-[600px] bg-[#4ADE80]/10 rounded-full blur-[100px] mix-blend-screen" />
+    <header className="relative overflow-hidden bg-[#171717] text-[#F9F7F2]">
+      {/* Main Hero */}
+      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          
+          {/* Left Content */}
+          <div className="relative z-10 max-w-2xl">
+            {/* Eyebrow */}
+            <div className="mb-7 flex items-center gap-3">
+              <span className="h-px w-10 bg-[#4ADE80]" />
+
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-[#4ADE80]">
+                Professional Pest Protection
+              </span>
+            </div>
+
+            {/* Heading */}
+            <h1 className="mb-7 text-5xl font-black leading-[0.95] tracking-[-0.04em] text-[#F9F7F2] sm:text-6xl lg:text-[76px]">
+              Pest control
+              <span className="block text-[#4ADE80]">
+                that books itself.
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p className="mb-9 max-w-xl text-base leading-7 text-[#F9F7F2]/65 sm:text-lg">
+              Premium residential and commercial treatment with flat rates,
+              straightforward service, and no sales calls. Choose a plan,
+              select a date, and protect your property in under a minute.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+              <a
+                href="#services"
+                className="inline-flex items-center justify-center gap-3 border-2 border-[#4ADE80] bg-[#4ADE80] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#171717] transition-colors duration-200 hover:border-[#F9F7F2] hover:bg-[#F9F7F2]"
+              >
+                View Service Plans
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5v5.69L5.22 13.72a.75.75 0 0 0 0 1.06Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </a>
+
+              <a
+                href="#standards"
+                className="group inline-flex items-center gap-2 border-b-2 border-[#3A6346] pb-1 text-sm font-bold uppercase tracking-wide text-[#F9F7F2] transition-colors duration-200 hover:border-[#4ADE80]"
+              >
+                Our Standards
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 10a.75.75 0 0 1 .75-.75h10.638l-3.844-3.844a.75.75 0 1 1 1.06-1.06l5.125 5.125a.75.75 0 0 1 0 1.06l-5.125 5.125a.75.75 0 0 1-1.06-1.06l3.844-3.844H3.75A.75.75 0 0 1 3 10Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+
+            {/* Trust Detail */}
+            <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[#F9F7F2]/10 pt-6">
+              <div>
+                <p className="text-lg font-black text-[#F9F7F2]">
+                  01
+                </p>
+                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.15em] text-[#F9F7F2]/45">
+                  Choose a plan
+                </p>
+              </div>
+
+              <div className="hidden h-8 w-px bg-[#F9F7F2]/10 sm:block" />
+
+              <div>
+                <p className="text-lg font-black text-[#F9F7F2]">
+                  02
+                </p>
+                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.15em] text-[#F9F7F2]/45">
+                  Pick a date
+                </p>
+              </div>
+
+              <div className="hidden h-8 w-px bg-[#F9F7F2]/10 sm:block" />
+
+              <div>
+                <p className="text-lg font-black text-[#F9F7F2]">
+                  03
+                </p>
+                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.15em] text-[#F9F7F2]/45">
+                  Stay protected
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Image */}
+          <div className="relative">
+            {/* Green framing block */}
+            <div className="absolute -right-3 -top-3 h-full w-full border-2 border-[#3A6346] sm:-right-5 sm:-top-5" />
+
+            {/* Image */}
+            <div className="relative overflow-hidden bg-[#3A6346]">
+              <img
+                src="/Worker Spraying.png"
+                alt="Professional pest control technician treating the exterior of a residential property"
+                className="h-[420px] w-full object-cover sm:h-[520px] lg:h-[600px]"
+              />
+
+              {/* Solid image label */}
+              <div className="absolute bottom-0 left-0 max-w-xs bg-[#171717] px-6 py-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="h-2 w-2 bg-[#4ADE80]" />
+
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#4ADE80]">
+                    Property Protection
+                  </span>
+                </div>
+
+                <p className="text-sm font-bold leading-5 text-[#F9F7F2]">
+                  Targeted treatment around the places pests enter,
+                  hide, and multiply.
+                </p>
+              </div>
+            </div>
+
+            {/* Vertical accent */}
+            <div className="absolute -bottom-4 -left-4 hidden h-24 w-24 border-b-4 border-l-4 border-[#4ADE80] sm:block" />
+          </div>
+        </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-20 lg:py-32 flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
-        {/* Left Text Content */}
-        <div className="flex-1 text-center lg:text-left z-10">
-          <h1 className="text-5xl lg:text-[72px] font-black leading-[1.05] tracking-tight text-[#FFFDF7] mb-6">
-            Pest control that{' '}
-            <em className="not-italic bg-gradient-to-r from-[#4ADE80] to-[#166534] bg-clip-text text-transparent">
-              books itself.
-            </em>
-          </h1>
-
-          <p className="text-lg lg:text-xl leading-relaxed text-[#FFFDF7]/70 max-w-xl mx-auto lg:mx-0 mb-10">
-            Premium residential and commercial treatment — flat rates, zero sales calls. Choose a plan, select a date, and secure your property in under a minute.
+      {/* Promotional Banner */}
+      <div className="border-t border-[#171717] bg-[#4ADE80] px-6 py-4 text-[#171717] sm:py-5">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
+          <p className="text-center text-sm font-bold sm:text-left sm:text-base">
+            First time with NestGuard? Save 30% on your first treatment.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <a
-              href="#services"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-[0.9rem] font-bold text-white bg-gradient-to-b from-[#166534] to-[#14532d] shadow-[0_4px_20px_rgba(22,101,52,0.3)] hover:shadow-[0_8px_30px_rgba(22,101,52,0.4)] hover:-translate-y-0.5 transition-all duration-300"
-            >
-              View Service Plans
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5h5.69L5.22 13.72a.75.75 0 0 0 0 1.06Z" clipRule="evenodd" />
-              </svg>
-            </a>
-            <a
-              href="#standards"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl text-[0.9rem] font-bold text-[#FFFDF7]/80 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-300"
-            >
-              Our Standards
-            </a>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-black uppercase tracking-[0.15em]">
+              Code
+            </span>
+
+            <span className="border-2 border-[#171717] px-3 py-1 text-sm font-black tracking-[0.2em]">
+              WELCOME30
+            </span>
           </div>
         </div>
-
-        {/* Right Hero Image (Masked) */}
-        <div className="flex-1 w-full max-w-2xl lg:max-w-none relative z-10 hidden md:block">
-          <div className="relative rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] transform lg:-rotate-2 hover:rotate-0 transition-transform duration-700">
-            <img 
-              src="/hero image.jpg" 
-              alt="Modern safe home environment" 
-              className="w-full h-[500px] object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#171717]/80 via-transparent to-transparent pointer-events-none" />
-          </div>
-        </div>
-      </div>
-
-      {/* Promo Banner */}
-      <div className="bg-[#001A3E] text-white px-4 py-4 sm:py-5 text-center sm:px-6 lg:px-8 shadow-md border-b-4 border-[#94C969]">
-        <p className="text-sm sm:text-base font-medium flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-          <span>Don't miss out on this first order deal! Get 30% off with code:</span>
-          <span className="inline-block font-black tracking-widest bg-[#94C969] text-[#001A3E] px-3 py-1 rounded-md shadow-sm">
-            WELCOME30
-          </span>
-        </p>
       </div>
     </header>
-  )
+  );
 }

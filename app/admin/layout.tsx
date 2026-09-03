@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import SignOutButton from '@/components/SignOutButton'
-import { ShoppingCart, Ticket, BarChart3 } from 'lucide-react'
+import { ShoppingCart, Ticket, BarChart3, Bug } from 'lucide-react'
 
 // Define your navigation links in a clean array
 const NAV_LINKS = [
   { name: 'Order Queue', href: '/admin', icon: ShoppingCart },
   { name: 'Promo Codes', href: '/admin/promos', icon: Ticket },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { name: 'Reports', href: '/admin/issues', icon: Bug },
 ]
 
 export default function AdminLayout({

@@ -10,6 +10,8 @@ import Reviews from '@/components/landing/Reviews'
 import StandardsPage from '@/components/landing/StandardsPage'
 import Footer from '@/components/landing/Footer'
 
+import ReportIssueModal from '@/components/ReportIssueModal'
+
 export default async function LandingPage({
   searchParams,
 }: {
@@ -59,6 +61,7 @@ export default async function LandingPage({
         </div>
       )}
 
+      <ReportIssueModal />
       {/* ─── PREMIUM SYMMETRICAL HERO ──────────────────────────────────────── */}
       <Hero />
 
