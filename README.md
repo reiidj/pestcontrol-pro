@@ -27,7 +27,7 @@ Instead of a standard e-commerce template, this platform engineers a real-world 
 
 To view the live version of this portfolio and explore the projects in detail, visit the link below:
 
-**Official Portfolio**: https://nestguardpest.vercel.app/
+**NestGuard Website**: https://nestguardpest.vercel.app/
 
 ## Platform Previews
 
