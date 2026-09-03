@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NestGuard Pest Control Services
+
+NestGuard is an enterprise-grade, full-stack service management platform. Built as a comprehensive software engineering portfolio project, this application demonstrates modern web architecture, secure authentication, and complex relational database management. 
+
+Instead of a standard e-commerce template, this platform engineers a real-world **Two-Way Quotation & Booking System**, backed by strict PostgreSQL security policies and seamless server-side rendering.
+
+## Key Features
+
+* **Dynamic Booking & Quotation Pipeline:** Replaces standard checkout flows with a lead-generation "$0 Free Estimate" architecture, allowing admins to process, price, and approve dynamic service quotes.
+* **Server-Rendered Admin Dashboard:** A protected administrative portal featuring real-time KPI aggregations (Completion Rate, Average Order Value, Revenue Growth) calculated securely on the server.
+* **Interactive Business Analytics:** Utilizes custom client-side SVG charting (Recharts) to visualize time-series revenue trends and demographic distributions.
+* **Complex Relational Database:** Engineered using PostgreSQL, featuring robust table joins across `orders`, `profiles`, and `services` to maintain high data integrity.
+* **Issue Reporting & Feedback:** Integrated user feedback and issue reporting pipeline, allowing authenticated users to log service issues directly to the administrative database.
+* **Enterprise-Grade Security:** Enforces strict Row-Level Security (RLS) in Supabase and Role-Based Access Control (RBAC) via JWTs. All database mutations are handled via Next.js Server Actions, eliminating vulnerable client-side API fetching.
+
+## Tech Stack & Architecture
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | Next.js 15 (App Router), React, Tailwind CSS | Modular UI, Server Components, Custom 5-color enterprise design system. |
+| **Backend** | Next.js Server Actions, TypeScript | API-less architecture for secure data mutations and strict type-safety on database joins. |
+| **Database & Auth** | Supabase, PostgreSQL | Relational data modeling, encrypted session management, and Row-Level Security. |
+| **Data Visualization** | Recharts, Lucide React | Interactive client-side charting and lightweight SVG iconography. |
+| **Deployment** | Vercel | Edge network hosting and continuous CI/CD pipeline integration. |
+
+## Platform Previews
+
+| Customer Booking Flow | Admin Analytics Dashboard |
+| :---: | :---: |
+| ![Booking Flow Placeholder](assets/images/BookingFlow.png) | ![Admin Dashboard Placeholder](assets/images/AdminDashboard.png) |
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running for development or evaluation, follow these steps.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
+* Node.js (v18.17 or higher)
+* npm, yarn, or pnpm
+* A Supabase Account
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/reiidj/nestguard-pest.git](https://github.com/reiidj/nestguard-pest.git)
+   cd nestguard-pest
