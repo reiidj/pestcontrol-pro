@@ -41,7 +41,7 @@ export default function AdminLayout({
       <aside className="hidden md:flex flex-col w-64 bg-[#0F1F15] text-white shrink-0 border-r border-[#0F1F15]">
         <div className="p-6 pb-2">
           <div className="text-xl font-black tracking-tight mb-8">
-            EcoGuard<span className="text-[#4A7C59]">Admin</span>
+            NestGuard<span className="text-[#4A7C59]">Admin</span>
           </div>
           <div className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Dashboard</div>
           
